@@ -13,9 +13,17 @@ const app = express();
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
 
-app.get('/api/notes', (req, res, query) => {
-  res.json(data);
-  console.log(query);
+
+app.get('/api/notes', (req, res) => {
+  const searchTerm = req.query.searchTerm;
+  if (searchTerm) {
+    let filteredList = data.filter(function(item) {
+      return item.title.includes(searchTerm);
+    });
+    res.json(filteredList);
+  } else {
+    res.json(data);
+  }
 });
 
 

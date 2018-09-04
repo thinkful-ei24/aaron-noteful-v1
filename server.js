@@ -13,8 +13,9 @@ const app = express();
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
 
-app.get('/api/notes', (req, res) => {
+app.get('/api/notes', (req, res, query) => {
   res.json(data);
+  console.log(query);
 });
 
 

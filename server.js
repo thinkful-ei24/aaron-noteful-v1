@@ -2,6 +2,8 @@
 
 // Load array of notes
 const data = require('./db/notes');
+const simDB = require('./db/simDB'); 
+const notes = simDB.initialize(data);
 const { PORT } = require('./config');
 const logger = require('./middleware/logger');
 
@@ -16,26 +18,35 @@ app.use(express.static('public'));
 
 app.use(logger.logger);
 
-app.get('/api/notes', (req, res) => {
-  const searchTerm = req.query.searchTerm;
-  if (searchTerm) {
-    let filteredList = data.filter(function(item) {
-      return item.title.includes(searchTerm);
-    });
-    res.json(filteredList);
-  } else {
-    res.json(data);
-  }
+app.get('/api/notes', (req, res, next) => {
+  const { searchTerm } = req.query;
+
+  notes.filter(searchTerm, (err, list) => {
+    if (err) {
+      return next(err); // goes to error handler
+    }
+    res.json(list); // responds with filtered array
+  });
 });
+
 
 app.get('/boom', (req, res, next) => {
   throw new Error('Boom!!');
 });
 
+
 app.get('/api/notes/:id', (req, res) => {
-  let newData = data.find(data => data.id === Number(req.params.id));
-  return res.send(newData);
+  const { id } = req.query.id;
+  console.log(req.query.id);
+
+  notes.find(id, (err, item) => {
+    if (err) {
+      return next(err);
+    }
+    res.json(item);
+  });
 });
+
 
 app.use(function (req, res, next) {
   var err = new Error('Not Found');

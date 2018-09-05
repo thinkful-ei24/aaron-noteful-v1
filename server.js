@@ -2,17 +2,16 @@
 
 // Load array of notes
 const data = require('./db/notes');
+const { PORT } = require('./config');
 
 
 // INSERT EXPRESS APP CODE HERE...
 
 const express = require('express');
-
 const app = express();
 
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
-
 
 app.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;
@@ -33,9 +32,7 @@ app.get('/api/notes/:id', (req, res) => {
 });
 
 
-
-
-app.listen(8080, function () {
+app.listen(PORT, function () {
   console.info(`Server listening on ${this.address().port}`);
 }).on('error', err => {
   console.error(err);

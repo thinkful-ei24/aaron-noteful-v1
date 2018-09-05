@@ -81,9 +81,13 @@ const noteful = (function () {
       api.update(noteObj.id, noteObj, updateResponse => {
         store.currentNote = updateResponse;
 
-        render();
-      });
+        api.search(store.currentSearchTerm, searchResponse => {
+          store.notes = searchResponse;
 
+          render();
+        });
+
+      });
     });
   }
 
@@ -101,7 +105,7 @@ const noteful = (function () {
       event.preventDefault();
 
       console.log('Delete Note, coming soon...');
-      
+
     });
   }
 

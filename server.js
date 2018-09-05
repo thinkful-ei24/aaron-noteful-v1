@@ -3,15 +3,19 @@
 // Load array of notes
 const data = require('./db/notes');
 const { PORT } = require('./config');
+const logger = require('./middleware/logger');
 
 
 // INSERT EXPRESS APP CODE HERE...
 
+const morgan = require('morgan');
 const express = require('express');
 const app = express();
 
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
+
+logger.log;
 
 app.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;

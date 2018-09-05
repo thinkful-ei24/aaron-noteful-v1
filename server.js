@@ -8,14 +8,13 @@ const logger = require('./middleware/logger');
 
 // INSERT EXPRESS APP CODE HERE...
 
-const morgan = require('morgan');
 const express = require('express');
 const app = express();
 
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
 
-logger.log;
+app.use(logger.logger);
 
 app.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;

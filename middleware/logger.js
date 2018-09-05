@@ -1,8 +1,11 @@
 'use strict';
 
-const express = require('express');
-const morgan = require('morgan');
+const logger = function(req, res, next) {
+  const time = new Date();
+  console.log(`${time.toLocaleString()} ${req.method} ${req.url}`);
+  next();
+};
 
-const app = express();
-
-app.use(morgan('common'));
+module.exports = {
+  logger
+};

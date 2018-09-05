@@ -35,15 +35,20 @@ app.get('/boom', (req, res, next) => {
 });
 
 
-app.get('/api/notes/:id', (req, res) => {
-  const { id } = req.query.id;
-  console.log(req.query.id);
+app.get('/api/notes/:id', (req, res, next) => {
+  const { id } = req.params.id;
 
   notes.find(id, (err, item) => {
     if (err) {
       return next(err);
     }
-    res.json(item);
+    if (item) {
+      res.json(item);
+    }
+    else {
+      next();
+    }
+    
   });
 });
 

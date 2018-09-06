@@ -13,7 +13,7 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 app.use(express.json());
 
-app.use(router.router);
+app.use('/api/notes', router.router);
 
 app.listen(PORT, function () {
   console.info(`Server listening on ${this.address().port}`);

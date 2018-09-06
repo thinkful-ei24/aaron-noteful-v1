@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 
-router.get('/api/notes', (req, res, next) => {
+router.get('/', (req, res, next) => {
   const { searchTerm } = req.query;
   
   notes.filter(searchTerm, (err, list) => {
@@ -27,7 +27,7 @@ router.get('/boom', (req, res, next) => {
 });
 
 
-router.get('/api/notes/:id', (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   const id = req.params.id;
 
   notes.find(id, (err, item) => {
@@ -44,7 +44,7 @@ router.get('/api/notes/:id', (req, res, next) => {
   });
 });
 
-router.put('/api/notes/:id', (req, res, next) => {
+router.put('/:id', (req, res, next) => {
   const id = req.params.id;
 
   const updateObj = {};

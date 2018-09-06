@@ -40,24 +40,30 @@ router.get('/:id', (req, res, next) => {
     else {
       next();
     }
-    
   });
 });
+
+
+router.delete('/:id', (req, res, next) => {
+  const id = req.params.id;
+  
+  notes.delete(id, (err) => {
+    return next(err);
+  });
+});
+
 
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
 
   const updateObj = {};
   const updateFields = ['title', 'content'];
-  console.log(req.body);
-  
 
   updateFields.forEach(field => {
     if (field in req.body) {
       updateObj[field] = req.body[field];
     }
   });
-  console.log(updateObj);
 
   notes.update(id, updateObj, (err, item) => {
     if (err) {
@@ -72,10 +78,10 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { id, title, content } = req.body;
 
+  const { id, title, content } = req.body;
   const newItem = { id, title, content };
-  /***** Never trust users - validate input *****/
+
   if (!newItem.title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;

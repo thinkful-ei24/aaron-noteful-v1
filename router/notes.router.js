@@ -1,7 +1,7 @@
 'use strict';
 
 const data = require('../db/notes');
-const simDB = require('../db/simDB'); 
+const simDB = require('../db/simDB');
 const notes = simDB.initialize(data);
 
 
@@ -12,14 +12,21 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
   const { searchTerm } = req.query;
-  
-  notes.filter(searchTerm, (err, list) => {
-    if (err) {
-      return next(err); 
-    }
-    res.json(list); 
-  });
+
+  notes.filter(searchTerm)
+    .then(list => {
+      if (list) {
+        res.json(list);
+      }
+      else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
 
 
 router.get('/boom', (req, res, next) => {
@@ -30,23 +37,23 @@ router.get('/boom', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
 
-  notes.find(id, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    }
-    else {
-      next();
-    }
-  });
+  notes.find(id)
+    .then(item => {
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
 
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  
+
   notes.delete(id, (err) => {
     return next(err);
   });
@@ -65,17 +72,21 @@ router.put('/:id', (req, res, next) => {
     }
   });
 
-  notes.update(id, updateObj, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
+  notes.update(id, updateObj)
+    .then(item => {
+      if (item) {
+        res.json(item);
+      }
+      else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
+
 
 router.post('/', (req, res, next) => {
 
@@ -116,4 +127,4 @@ router.use(function (err, req, res, next) {
 });
 
 
-module.exports = {router};
+module.exports = { router };

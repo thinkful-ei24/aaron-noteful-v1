@@ -165,6 +165,12 @@ const noteful = (function () {
           render();
         });
 
+      api.search(store.currentSearchTerm)
+        .then(searchResponse => {
+          store.notes = searchResponse;
+          render();
+        });
+
 
       // api.remove(noteId, () => {
 

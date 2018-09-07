@@ -3,14 +3,6 @@
 
 const noteful = (function () {
 
-  const data = require('../db/notes');
-  const simDB = require('../db/simDB');
-  const notes = simDB.initialize(data);
-
-
-  const express = require('express');
-  const router = express.Router();
-
 
 
   function render() {
@@ -103,6 +95,12 @@ const noteful = (function () {
             store.currentNote = item;
           });
 
+        api.search(store.currentSearchTerm)
+          .then(searchResponse => {
+            store.notes = searchResponse;
+            render();
+          });
+
         // api.update(store.currentNote.id, noteObj, updateResponse => {
         //   store.currentNote = updateResponse;
 
@@ -119,6 +117,12 @@ const noteful = (function () {
         api.create(noteObj)
           .then(item => {
             store.currentNote = item;
+          });
+
+        api.search(store.currentSearchTerm)
+          .then(searchResponse => {
+            store.notes = searchResponse;
+            render();
           });
 
         // api.create(noteObj, createResponse => {
@@ -152,12 +156,8 @@ const noteful = (function () {
       const noteId = getNoteIdFromElement(event.currentTarget);
 
       api.remove(noteId)
-        .then()
-
-
-      api.remove(noteId, () => {
-
-        api.search(store.currentSearchTerm, searchResponse => {
+        .then(() => api.search(store.currentSearchTerm))
+        .then(searchResponse => {
           store.notes = searchResponse;
           if (noteId === store.currentNote.id) {
             store.currentNote = {};
@@ -165,7 +165,18 @@ const noteful = (function () {
           render();
         });
 
-      });
+
+      // api.remove(noteId, () => {
+
+      //   api.search(store.currentSearchTerm, searchResponse => {
+      //     store.notes = searchResponse;
+      //     if (noteId === store.currentNote.id) {
+      //       store.currentNote = {};
+      //     }
+      //     render();
+      //   });
+
+      // });
     });
   }
 

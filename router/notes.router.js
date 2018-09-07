@@ -54,9 +54,15 @@ router.get('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
 
-  notes.delete(id, (err) => {
-    return next(err);
-  });
+  notes.delete(id)
+    .then(() => {
+      console.log('Deleted Item');
+      next();
+    })
+    .catch(err => {
+      next(err);
+    });
+
 });
 
 
@@ -99,16 +105,29 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  notes.create(newItem, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.location(`http://${req.headers.host}/${item.id}`).status(201).json(item);
-    } else {
-      next();
-    }
-  });
+  notes.create(newItem)
+    .then((item) => {
+      if (item) {
+        res.location(`http://${req.headers.host}/${item.id}`).status(201).json(item);
+      }
+      else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+
+  // notes.create(newItem, (err, item) => {                           <------------- Non promise method
+  //   if (err) {
+  //     return next(err);
+  //   }
+  //   if (item) {
+  //     res.location(`http://${req.headers.host}/${item.id}`).status(201).json(item);
+  //   } else {
+  //     next();
+  //   }
+  // });
 });
 
 
